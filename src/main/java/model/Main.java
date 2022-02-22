@@ -14,4 +14,8 @@ public class Main {
      private double tempMax;
      private int pressure;
      private int humidity;
+     @JsonProperty("sea_level")
+     private int seaLevel;
+     @JsonProperty("grnd_level")
+     private int groundLevel;
 }

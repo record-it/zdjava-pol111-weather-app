@@ -21,9 +21,23 @@ public class OpenWeatherRepository implements WeatherRepository{
 
     @Override
     public Optional<CurrentWeather> findCurrentWeather(String cityName) {
-        log.info("Pobieranie UIR: " + uri.getURIByCity(cityName));
+        log.info("Pobieranie z URI: " + uri.getURIByCity(cityName));
         try {
             return weatherApiRepository.getObject(uri.getURIByCity(cityName));
+        } catch (IOException e) {
+            log.log(Level.WARNING, e.getMessage());
+            return Optional.empty();
+        } catch (InterruptedException e) {
+            log.log(Level.WARNING, e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<CurrentWeather> findCurrentWeather(String cityName, String countryCode) {
+        log.info("Pobieranie z URI: " + uri.getURIByCityAndCountryCode(cityName, countryCode));
+        try {
+            return weatherApiRepository.getObject(uri.getURIByCityAndCountryCode(cityName, countryCode));
         } catch (IOException e) {
             log.log(Level.WARNING, e.getMessage());
             return Optional.empty();
