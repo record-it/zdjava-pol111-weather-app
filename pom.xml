@@ -37,6 +37,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>FxWeatherApp</mainClass>
+                    <commandlineArgs>615d3ad8681ea723781b4255adda0859</commandlineArgs>
                 </configuration>
             </plugin>
         </plugins>
