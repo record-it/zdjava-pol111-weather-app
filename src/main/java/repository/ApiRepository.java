@@ -1,6 +1,7 @@
 package repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Log
 public class ApiRepository<T> {
     private HttpClient client = HttpClient.newHttpClient();
     private ObjectMapper mapper = new ObjectMapper();
@@ -29,6 +31,7 @@ public class ApiRepository<T> {
 
     public Optional<T> getObject(URI uri) throws IOException, InterruptedException {
         final HttpResponse<String> response = getStringHttpResponse(uri);
+        log.info("Response: " + response.body() +" status: " + response.statusCode());
         if (response.statusCode() == 200 || response.statusCode() == 304) {
             return Optional.of(mapper.readValue(response.body(), clazz));
         }

@@ -8,6 +8,7 @@ import util.OpenWeatherURI;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
 
 @Log
 public class OpenWeatherRepository implements WeatherRepository{
@@ -20,13 +21,14 @@ public class OpenWeatherRepository implements WeatherRepository{
 
     @Override
     public Optional<CurrentWeather> findCurrentWeather(String cityName) {
+        log.info("Pobieranie UIR: " + uri.getURIByCity(cityName));
         try {
             return weatherApiRepository.getObject(uri.getURIByCity(cityName));
         } catch (IOException e) {
-            log.throwing(OpenWeatherRepository.class.getName(), "findCurrentWeather", e);
+            log.log(Level.WARNING, e.getMessage());
             return Optional.empty();
         } catch (InterruptedException e) {
-            log.throwing(OpenWeatherRepository.class.getName(), "findCurrentWeather", e);
+            log.log(Level.WARNING, e.getMessage());
             return Optional.empty();
         }
     }
