@@ -2,6 +2,8 @@ package model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CurrentWeather {
     private Coordinate coord;
@@ -9,7 +11,7 @@ public class CurrentWeather {
     private Main main;
     private Sys sys;
     private Wind wind;
-    private Weather weather;
+    private List<Weather> weather;
     private String base;
     private int visibility;
     private long dt;
