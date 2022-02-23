@@ -3,7 +3,10 @@ package model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.persistence.Embeddable;
+
 @Data
+@Embeddable
 public class Main {
      private double temp;
      @JsonProperty("feels_like")

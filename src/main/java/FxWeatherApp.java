@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import lombok.Builder;
 import lombok.extern.java.Log;
 import model.CurrentWeather;
+import repository.JpaOpenWeatherRepository;
 import repository.OpenWeatherRepository;
 import repository.WeatherRepository;
 
@@ -21,10 +22,13 @@ public class FxWeatherApp extends Application {
     private Label temperatureLabel = new Label("Temperatura");
     private Label pressureLabel = new Label("Ciśnienie");
     private Button getWeatherInfonButton = new Button("Odśwież");
+    private Button saveWeatherButton = new Button("Zapisz");
     private TextField cityField = new TextField();
     private TextField codeField = new TextField();
+    private Optional<CurrentWeather> weather = Optional.empty();
     private static String apiKey;
     WeatherRepository weatherRepository = new OpenWeatherRepository(apiKey);
+    JpaOpenWeatherRepository jpaOpenWeatherRepository = new JpaOpenWeatherRepository();
 
     public static void main(String[] args) {
         if (args[0] == null){
@@ -41,7 +45,7 @@ public class FxWeatherApp extends Application {
     }
 
     private void updateWeather(){
-        final Optional<CurrentWeather> weather =
+        weather =
                 weatherRepository.findCurrentWeather(cityField.getText(), codeField.getText());
         log.info("Pobrano: " + weather);
         if (weather.isPresent()){
@@ -50,9 +54,16 @@ public class FxWeatherApp extends Application {
         }
     }
 
+    private void saveWheather(){
+        weather.ifPresent(currentWeather -> jpaOpenWeatherRepository.save(currentWeather));
+    }
+
     private void buildGUI(Stage stage){
         getWeatherInfonButton.setOnAction(actionEvent -> {
             updateWeather();
+        });
+        saveWeatherButton.setOnAction(actionEvent -> {
+            saveWheather();
         });
         root.setPadding(new Insets(10));
         root.add(new Label("Temperatura powietrza:"), 1, 1);
@@ -66,6 +77,7 @@ public class FxWeatherApp extends Application {
         root.add(codeField, 2, 4);
 
         root.add(getWeatherInfonButton, 2, 5);
+        root.add(saveWeatherButton, 2, 6);
         stage.setScene(scene);
         stage.setTitle("Pogodynka");
         stage.setResizable(false);
