@@ -1,6 +1,7 @@
 package model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,5 +29,6 @@ public class CityWeather {
     @Embedded
     private Sys sys;
 
+    @CreationTimestamp
     private LocalDate date;
 }

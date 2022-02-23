@@ -8,11 +8,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import lombok.Builder;
 import lombok.extern.java.Log;
+import model.CityWeather;
 import model.CurrentWeather;
 import repository.JpaOpenWeatherRepository;
 import repository.OpenWeatherRepository;
 import repository.WeatherRepository;
+import service.WeatherService;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Log
@@ -22,13 +25,13 @@ public class FxWeatherApp extends Application {
     private Label temperatureLabel = new Label("Temperatura");
     private Label pressureLabel = new Label("Ciśnienie");
     private Button getWeatherInfonButton = new Button("Odśwież");
-    private Button saveWeatherButton = new Button("Zapisz");
     private TextField cityField = new TextField();
     private TextField codeField = new TextField();
-    private Optional<CurrentWeather> weather = Optional.empty();
+    private Optional<CityWeather> weather = Optional.empty();
     private static String apiKey;
     WeatherRepository weatherRepository = new OpenWeatherRepository(apiKey);
     JpaOpenWeatherRepository jpaOpenWeatherRepository = new JpaOpenWeatherRepository();
+    private WeatherService service = new WeatherService(apiKey);
 
     public static void main(String[] args) {
         if (args[0] == null){
@@ -46,7 +49,7 @@ public class FxWeatherApp extends Application {
 
     private void updateWeather(){
         weather =
-                weatherRepository.findCurrentWeather(cityField.getText(), codeField.getText());
+                service.findByCityAndDate(cityField.getText(), LocalDate.now());
         log.info("Pobrano: " + weather);
         if (weather.isPresent()){
             temperatureLabel.setText(String.format("%3.1f",weather.get().getMain().getTemp()));
@@ -54,16 +57,9 @@ public class FxWeatherApp extends Application {
         }
     }
 
-    private void saveWheather(){
-        weather.ifPresent(currentWeather -> jpaOpenWeatherRepository.save(currentWeather));
-    }
-
     private void buildGUI(Stage stage){
         getWeatherInfonButton.setOnAction(actionEvent -> {
             updateWeather();
-        });
-        saveWeatherButton.setOnAction(actionEvent -> {
-            saveWheather();
         });
         root.setPadding(new Insets(10));
         root.add(new Label("Temperatura powietrza:"), 1, 1);
@@ -72,12 +68,9 @@ public class FxWeatherApp extends Application {
         root.add(pressureLabel, 2, 2);
         root.add(new Label("Miasto"), 1, 3);
         root.add(cityField, 2, 3);
-
         root.add(new Label("Kod kraju"), 1, 4);
         root.add(codeField, 2, 4);
-
         root.add(getWeatherInfonButton, 2, 5);
-        root.add(saveWeatherButton, 2, 6);
         stage.setScene(scene);
         stage.setTitle("Pogodynka");
         stage.setResizable(false);
