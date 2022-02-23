@@ -29,13 +29,10 @@
 
             <property name="hibernate.format_sql"
                       value="true"/>
-
             <property name="hibernate.hbm2ddl.auto"
                       value="update"/>
         </properties>
-
     </persistence-unit>
-
 </persistence>
 
 

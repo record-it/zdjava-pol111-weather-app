@@ -11,10 +11,10 @@ public class OpenWeatherURI {
     }
 
     public URI getURIByCity(String cityName){
-        return URI.create(String.format("%s?q=%s&appid=%s",BASE_URL, cityName, apiKey));
+        return URI.create(String.format("%s?q=%s&appid=%s&units=metric&lang=pl",BASE_URL, cityName, apiKey));
     }
 
     public URI getURIByCityAndCountryCode(String cityName, String countryCode){
-        return URI.create(String.format("%s?q=%s,%s&appid=%s",BASE_URL, cityName, countryCode, apiKey));
+        return URI.create(String.format("%s?q=%s,%s&appid=%s&units=metric&lang=pl",BASE_URL, cityName, countryCode, apiKey));
     }
 }
